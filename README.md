@@ -19,8 +19,8 @@ except:
 - If the property already exists, its descriptors are
   [used as default](#keep-previous-descriptor), even if the property is
   [inherited](#keep-inherited-descriptor)
-- Invalid arguments throw with a clear error message
-- Otherwise, this never throws
+- Invalid arguments throw with a [clear error message](#better-validation)
+- Otherwise, this [never throws](#exception-safety)
 
 # Example
 
@@ -58,8 +58,9 @@ not `require()`.
 `descriptor` `PropertyDescriptor`\
 _Return value_: `value`
 
-Like `Object.defineProperty(value, key, descriptor)`, but with some
-[additional features](#features).
+Like
+[`Object.defineProperty(...)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)
+but with some [additional features](#features).
 
 # Usage
 
@@ -136,6 +137,15 @@ console.log(Object.getOwnPropertyDescriptor(otherError, 'name'))
 //   writable: false,
 //   configurable: false,
 // }
+```
+
+## Better validation
+
+<!-- eslint-disable fp/no-mutating-methods -->
+
+```js
+Object.getOwnPropertyDescriptor({}, true, { value: 0 }) // This does not throw
+redefineProperty({}, true, { value: 0 }) // This throws
 ```
 
 ## Exception safety
