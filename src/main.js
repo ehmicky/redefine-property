@@ -2,30 +2,30 @@ import { mergeDescriptors } from './merge.js'
 import { normalizeInput } from './normalize.js'
 
 // Better `Object.defineProperty()`
-export default function redefineProperty(value, propName, newDescriptor) {
-  const newDescriptorA = normalizeInput(value, propName, newDescriptor)
-  const currentDescriptor = getCurrentDescriptor(value, propName)
+export default function redefineProperty(input, key, newDescriptor) {
+  const newDescriptorA = normalizeInput(input, key, newDescriptor)
+  const currentDescriptor = getCurrentDescriptor(input, key)
   const finalDescriptor = mergeDescriptors(newDescriptorA, currentDescriptor)
-  setProperty(value, propName, finalDescriptor)
-  return value
+  setProperty(input, key, finalDescriptor)
+  return input
 }
 
 // Retrieve current descriptor (if any) even on inherited properties
-const getCurrentDescriptor = function (value, propName) {
-  const descriptor = Object.getOwnPropertyDescriptor(value, propName)
+const getCurrentDescriptor = function (input, key) {
+  const descriptor = Object.getOwnPropertyDescriptor(input, key)
 
   if (descriptor !== undefined) {
     return descriptor
   }
 
-  const prototype = Object.getPrototypeOf(value)
-  return prototype === null ? {} : getCurrentDescriptor(prototype, propName)
+  const prototype = Object.getPrototypeOf(input)
+  return prototype === null ? {} : getCurrentDescriptor(prototype, key)
 }
 
 // This might throw when using `Proxy`, etc.
-const setProperty = function (value, propName, finalDescriptor) {
+const setProperty = function (input, key, finalDescriptor) {
   try {
     // eslint-disable-next-line fp/no-mutating-methods
-    Object.defineProperty(value, propName, finalDescriptor)
+    Object.defineProperty(input, key, finalDescriptor)
   } catch {}
 }
