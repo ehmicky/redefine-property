@@ -1,12 +1,11 @@
 /**
- * `redefine-property` options
- */
-export interface Options {}
-
-/**
  *
  * @example
  * ```js
  * ```
  */
-export default function redefineProperty(value: any, options?: Options): object
+export default function redefineProperty<T extends object>(
+  object: T,
+  key: PropertyKey,
+  descriptor: PropertyDescriptor,
+): T
