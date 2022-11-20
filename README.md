@@ -8,14 +8,33 @@
 
 Better `Object.defineProperty()`.
 
-Work in progress!
-
 # Features
+
+This is identical to
+[`Object.defineProperty()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)
+except:
+
+- The [default value](#default-values) of `enumerable`, `writable` and
+  `configurable` is `true`
+- If the property already exists, its descriptors are
+  [used as default](#keep-previous-descriptor), even if the property is
+  [inherited](#keep-inherited-descriptor)
+- Invalid arguments throw with a clear error message
+- Otherwise, this never throws
 
 # Example
 
 ```js
 import redefineProperty from 'redefine-property'
+
+const object = redefineProperty({}, 'prop', { value: 0, enumerable: false })
+console.log(Object.getOwnPropertyDescriptor(object, 'prop'))
+// {
+//   value: 0,
+//   enumerable: false,
+//   writable: true,
+//   configurable: true,
+// }
 ```
 
 # Install
@@ -30,30 +49,112 @@ It is an ES module and must be loaded using
 [an `import` or `import()` statement](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c),
 not `require()`.
 
-<!--
-This package works in Node.js >=14.18.0. It is an ES module and must be loaded
-using
-[an `import` or `import()` statement](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c),
-not `require()`.
--->
-
 # API
 
-## redefineProperty(value, options?)
+## redefineProperty(value, key, descriptor)
 
-`value` `any`\
-`options` [`Options?`](#options)\
-_Return value_: [`object`](#return-value)
+`value` `object`\
+`key` `string | symbol | number`\
+`descriptor` `PropertyDescriptor`\
+_Return value_: `value`
 
-### Options
+Like `Object.defineProperty(value, key, descriptor)`, but with some
+[additional features](#features).
 
-Object with the following properties.
+# Usage
 
-### Return value
+## Default values
 
-Object with the following properties.
+<!-- eslint-disable fp/no-mutating-methods -->
 
-# Related projects
+```js
+const object = redefineProperty({}, 'prop', { value: 0 })
+console.log(Object.getOwnPropertyDescriptor(object, 'prop'))
+// {
+//   value: 0,
+//   enumerable: true,
+//   writable: true,
+//   configurable: true,
+// }
+
+const otherObject = Object.defineProperty({}, 'prop', { value: 0 })
+console.log(Object.getOwnPropertyDescriptor(otherObject, 'prop'))
+// {
+//   value: 0,
+//   enumerable: false,
+//   writable: false,
+//   configurable: false,
+// }
+```
+
+## Keep previous descriptor
+
+```js
+const object = redefineProperty({}, 'prop', {
+  value: 0,
+  enumerable: false,
+  writable: true,
+  configurable: true,
+})
+redefineProperty(object, 'prop', { value: 1, configurable: false })
+console.log(Object.getOwnPropertyDescriptor(object, 'prop'))
+// {
+//   value: 1,
+//   enumerable: false,
+//   writable: true,
+//   configurable: false,
+// }
+```
+
+## Keep inherited descriptor
+
+<!-- eslint-disable fp/no-class, fp/no-mutating-methods -->
+
+```js
+class CustomError extends Error {}
+redefineProperty(CustomError.prototype, 'name', {
+  value: 'CustomError',
+  enumerable: false,
+})
+
+const error = new CustomError('')
+redefineProperty(error, 'name', { value: 'ExampleError' })
+console.log(Object.getOwnPropertyDescriptor(error, 'name'))
+// {
+//   value: 'ExampleError',
+//   enumerable: false,
+//   writable: true,
+//   configurable: true,
+// }
+
+const otherError = new CustomError('')
+Object.defineProperty(otherError, 'name', { value: 'ExampleError' })
+console.log(Object.getOwnPropertyDescriptor(otherError, 'name'))
+// {
+//   value: 'ExampleError',
+//   enumerable: false,
+//   writable: false,
+//   configurable: false,
+// }
+```
+
+## Exception safety
+
+<!-- eslint-disable fp/no-proxy, fp/no-mutating-methods -->
+
+```js
+const object = new Proxy(
+  {},
+  {
+    defineProperty() {
+      throw new Error('example')
+    },
+  },
+)
+
+redefineProperty(object, 'prop', { value: 1 }) // This does not throw
+Object.defineProperty(object, 'prop', { value: 1 }) // This throws
+```
 
 # Support
 
