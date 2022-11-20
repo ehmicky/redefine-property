@@ -144,7 +144,7 @@ console.log(Object.getOwnPropertyDescriptor(otherError, 'name'))
 <!-- eslint-disable fp/no-mutating-methods -->
 
 ```js
-Object.getOwnPropertyDescriptor({}, true, { value: 0 }) // This does not throw
+Object.defineProperty({}, true, { value: 0 }) // This does not throw
 redefineProperty({}, true, { value: 0 }) // This throws
 ```
 
