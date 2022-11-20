@@ -66,7 +66,6 @@ each(
           { [propName]: undefined },
           { [propName]: oldValue },
         ],
-        // eslint-disable-next-line max-nested-callbacks
         ...[true, false].map((newValue) => [
           { [propName]: oldValue, configurable: true },
           { [propName]: newValue },
