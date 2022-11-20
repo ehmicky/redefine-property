@@ -5,8 +5,9 @@ export const mergeDescriptors = function (newDescriptor, currentDescriptor) {
     : mergeConfig(newDescriptor, currentDescriptor)
 }
 
-// Non-configurable properties can still change the `value`, or set `writable`
-// from `true` to `false`
+// Non-configurable properties can still:
+//  - Change the `value`, if `writable`
+//  - Set `writable` from `true` to `false`
 const mergeNonConfig = function (newDescriptor, currentDescriptor) {
   return {
     ...currentDescriptor,
@@ -22,13 +23,14 @@ const getNonConfigWritable = function (newDescriptor, currentDescriptor) {
 }
 
 const getNonConfigValue = function (newDescriptor, currentDescriptor) {
-  return newDescriptor.hasValue && 'value' in currentDescriptor
+  return newDescriptor.hasValue &&
+    'value' in currentDescriptor &&
+    currentDescriptor.writable === true
     ? { value: newDescriptor.value }
     : {}
 }
 
 const mergeConfig = function (newDescriptor, currentDescriptor) {
-  const valueProps = mergeValue(newDescriptor, currentDescriptor)
   const enumerable = mergeDescriptor(
     newDescriptor.enumerable,
     currentDescriptor.enumerable,
@@ -44,16 +46,17 @@ const mergeConfig = function (newDescriptor, currentDescriptor) {
     currentDescriptor.configurable,
     true,
   )
-  return { ...valueProps, enumerable, writable, configurable }
+  const valueProps = mergeValue(newDescriptor, currentDescriptor, writable)
+  return { ...valueProps, enumerable, configurable }
 }
 
-const mergeValue = function (newDescriptor, currentDescriptor) {
+const mergeValue = function (newDescriptor, currentDescriptor, writable) {
   if (newDescriptor.hasValue) {
-    return { value: newDescriptor.value }
+    return { value: newDescriptor.value, writable }
   }
 
   if (!hasGetSet(newDescriptor) && !hasGetSet(currentDescriptor)) {
-    return { value: currentDescriptor.value }
+    return { value: currentDescriptor.value, writable }
   }
 
   return {
