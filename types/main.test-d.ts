@@ -1,7 +1,7 @@
-import templateName, { Options } from 'template-name'
+import redefineProperty, { Options } from 'redefine-property'
 import { expectType, expectAssignable } from 'tsd'
 
-expectType<object>(templateName(true))
+expectType<object>(redefineProperty(true))
 
-templateName(true, {})
+redefineProperty(true, {})
 expectAssignable<Options>({})
