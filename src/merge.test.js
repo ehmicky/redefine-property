@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import test from 'ava'
 import redefineProperty from 'redefine-property'
 import { each } from 'test-each'
@@ -128,4 +127,3 @@ test('Partial default descriptors', (t) => {
   t.false(descriptor.enumerable)
   t.true(descriptor.configurable)
 })
-/* eslint-enable max-lines */
