@@ -156,7 +156,7 @@ redefineProperty({}, true, { value: 0 }) // This throws
 const object = new Proxy(
   {},
   {
-    defineProperty() {
+    defineProperty: () => {
       throw new Error('example')
     },
   },

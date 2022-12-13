@@ -1,7 +1,7 @@
 import isPlainObj from 'is-plain-obj'
 
 // Normalize and validate arguments
-export const normalizeInput = function (input, key, newDescriptor) {
+export const normalizeInput = (input, key, newDescriptor) => {
   if (!isAnyObj(input)) {
     throw new TypeError(`Argument must be an object: ${input}`)
   }
@@ -15,16 +15,14 @@ export const normalizeInput = function (input, key, newDescriptor) {
   return normalizeDescriptor(newDescriptor)
 }
 
-const isAnyObj = function (value) {
-  return typeof value === 'object' && value !== null
-}
+const isAnyObj = (value) => typeof value === 'object' && value !== null
 
-const isValidKey = function (key) {
+const isValidKey = (key) => {
   const type = typeof key
   return type === 'string' || type === 'symbol' || type === 'number'
 }
 
-const normalizeDescriptor = function (newDescriptor) {
+const normalizeDescriptor = (newDescriptor) => {
   if (!isPlainObj(newDescriptor)) {
     throw new TypeError(`Descriptor must be a plain object: ${newDescriptor}`)
   }
@@ -51,7 +49,7 @@ const normalizeDescriptor = function (newDescriptor) {
   return { enumerable, writable, configurable, value, get, set, hasValue }
 }
 
-const validateDescriptor = function ({
+const validateDescriptor = ({
   enumerable,
   writable,
   configurable,
@@ -59,7 +57,7 @@ const validateDescriptor = function ({
   set,
   unknownProps,
   hasValue,
-}) {
+}) => {
   validateGetSet(hasValue, get, 'get')
   validateGetSet(hasValue, set, 'set')
   validateBoolean(enumerable, 'enumerable')
@@ -68,7 +66,7 @@ const validateDescriptor = function ({
   validateUnknownProps(unknownProps)
 }
 
-const validateGetSet = function (hasValue, getSet, propName) {
+const validateGetSet = (hasValue, getSet, propName) => {
   validateFunction(getSet, propName)
 
   if (hasValue && getSet !== undefined) {
@@ -78,7 +76,7 @@ const validateGetSet = function (hasValue, getSet, propName) {
   }
 }
 
-const validateFunction = function (propValue, propName) {
+const validateFunction = (propValue, propName) => {
   if (propValue !== undefined && typeof propValue !== 'function') {
     throw new TypeError(
       `Descriptor property "${propName}" must be a function: ${propValue}`,
@@ -86,7 +84,7 @@ const validateFunction = function (propValue, propName) {
   }
 }
 
-const validateBoolean = function (propValue, propName) {
+const validateBoolean = (propValue, propName) => {
   if (propValue !== undefined && typeof propValue !== 'boolean') {
     throw new TypeError(
       `Descriptor property "${propName}" must be a boolean: ${propValue}`,
@@ -94,7 +92,7 @@ const validateBoolean = function (propValue, propName) {
   }
 }
 
-const validateUnknownProps = function (unknownProps) {
+const validateUnknownProps = (unknownProps) => {
   const [unknownProp] = Object.keys(unknownProps)
 
   if (unknownProp !== undefined) {

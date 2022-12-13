@@ -7,7 +7,7 @@ test('Handle errors when setting', (t) => {
   const input = new Proxy(
     {},
     {
-      defineProperty() {
+      defineProperty: () => {
         throw new Error('unsafe')
       },
     },

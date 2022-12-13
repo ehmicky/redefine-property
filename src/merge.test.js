@@ -3,8 +3,8 @@ import { each } from 'test-each'
 
 import redefineProperty from 'redefine-property'
 
-const noop = function () {}
-const otherNoop = function () {}
+const noop = () => {}
+const otherNoop = () => {}
 
 each(
   [

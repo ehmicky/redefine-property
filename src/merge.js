@@ -1,36 +1,31 @@
 // Merge the new descriptor with the current one, if any
-export const mergeDescriptors = function (newDescriptor, currentDescriptor) {
-  return currentDescriptor.configurable === false
+export const mergeDescriptors = (newDescriptor, currentDescriptor) =>
+  currentDescriptor.configurable === false
     ? mergeNonConfig(newDescriptor, currentDescriptor)
     : mergeConfig(newDescriptor, currentDescriptor)
-}
 
 // Non-configurable properties can still:
 //  - Change the `value`, if `writable`
 //  - Set `writable` from `true` to `false`
-const mergeNonConfig = function (newDescriptor, currentDescriptor) {
-  return {
-    ...currentDescriptor,
-    ...getNonConfigWritable(newDescriptor, currentDescriptor),
-    ...getNonConfigValue(newDescriptor, currentDescriptor),
-  }
-}
+const mergeNonConfig = (newDescriptor, currentDescriptor) => ({
+  ...currentDescriptor,
+  ...getNonConfigWritable(newDescriptor, currentDescriptor),
+  ...getNonConfigValue(newDescriptor, currentDescriptor),
+})
 
-const getNonConfigWritable = function (newDescriptor, currentDescriptor) {
-  return currentDescriptor.writable === true && newDescriptor.writable === false
+const getNonConfigWritable = (newDescriptor, currentDescriptor) =>
+  currentDescriptor.writable === true && newDescriptor.writable === false
     ? { writable: false }
     : {}
-}
 
-const getNonConfigValue = function (newDescriptor, currentDescriptor) {
-  return newDescriptor.hasValue &&
-    'value' in currentDescriptor &&
-    currentDescriptor.writable === true
+const getNonConfigValue = (newDescriptor, currentDescriptor) =>
+  newDescriptor.hasValue &&
+  'value' in currentDescriptor &&
+  currentDescriptor.writable === true
     ? { value: newDescriptor.value }
     : {}
-}
 
-const mergeConfig = function (newDescriptor, currentDescriptor) {
+const mergeConfig = (newDescriptor, currentDescriptor) => {
   const enumerable = mergeDescriptor(
     newDescriptor.enumerable,
     currentDescriptor.enumerable,
@@ -50,7 +45,7 @@ const mergeConfig = function (newDescriptor, currentDescriptor) {
   return { ...valueProps, enumerable, configurable }
 }
 
-const mergeValue = function (newDescriptor, currentDescriptor, writable) {
+const mergeValue = (newDescriptor, currentDescriptor, writable) => {
   if (newDescriptor.hasValue) {
     return { value: newDescriptor.value, writable }
   }
@@ -65,10 +60,7 @@ const mergeValue = function (newDescriptor, currentDescriptor, writable) {
   }
 }
 
-const hasGetSet = function ({ get, set }) {
-  return get !== undefined || set !== undefined
-}
+const hasGetSet = ({ get, set }) => get !== undefined || set !== undefined
 
-const mergeDescriptor = function (newValue, currentValue, defaultValue) {
-  return newValue ?? currentValue ?? defaultValue
-}
+const mergeDescriptor = (newValue, currentValue, defaultValue) =>
+  newValue ?? currentValue ?? defaultValue

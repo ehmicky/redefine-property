@@ -29,13 +29,13 @@ redefineProperty({}, 'prop', { configurable: true })
 redefineProperty({}, 'prop', { configurable: 'true' })
 redefineProperty({}, 'prop', { value: true })
 redefineProperty({}, 'prop', { value: undefined })
-redefineProperty({}, 'prop', { get() {} })
+redefineProperty({}, 'prop', { get: () => {} })
 // @ts-expect-error
 redefineProperty({}, 'prop', { get: true })
 // @ts-expect-error
-redefineProperty({}, 'prop', { get(value: true) {} })
-redefineProperty({}, 'prop', { set(value: unknown) {} })
-redefineProperty({}, 'prop', { set() {} })
+redefineProperty({}, 'prop', { get: (value: true) => {} })
+redefineProperty({}, 'prop', { set: (value: unknown) => {} })
+redefineProperty({}, 'prop', { set: () => {} })
 redefineProperty({}, 'prop', { set: (value: unknown) => true })
 // @ts-expect-error
 redefineProperty({}, 'prop', { set: true })
