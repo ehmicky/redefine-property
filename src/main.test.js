@@ -1,5 +1,4 @@
 import test from 'ava'
-
 import redefineProperty from 'redefine-property'
 
 test('Handle errors when setting', (t) => {
