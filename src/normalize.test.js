@@ -2,7 +2,6 @@ import test from 'ava'
 import redefineProperty from 'redefine-property'
 import { each } from 'test-each'
 
-
 each(
   [
     [],

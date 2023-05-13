@@ -1,7 +1,6 @@
 import redefineProperty from 'redefine-property'
 import { expectType } from 'tsd'
 
-
 expectType<{}>(redefineProperty({}, 'prop', {}))
 expectType<{ a: 1 }>(redefineProperty({ a: 1 as const }, 'prop', {}))
 
