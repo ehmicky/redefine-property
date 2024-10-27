@@ -2,6 +2,7 @@ import { expectType } from 'tsd'
 
 import redefineProperty from 'redefine-property'
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 expectType<{}>(redefineProperty({}, 'prop', {}))
 expectType<{ a: 1 }>(redefineProperty({ a: 1 as const }, 'prop', {}))
 
