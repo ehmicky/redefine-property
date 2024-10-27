@@ -102,7 +102,6 @@ each(
   ],
   ({ title }, [currentDescriptor, newDescriptor, expectedDescriptor]) => {
     test(`Can set descriptors | ${title}`, (t) => {
-      // eslint-disable-next-line fp/no-mutating-methods
       const input = Object.defineProperty({}, 'prop', currentDescriptor)
       const inputA = redefineProperty(input, 'prop', newDescriptor)
       const descriptor = Object.getOwnPropertyDescriptor(inputA, 'prop')
