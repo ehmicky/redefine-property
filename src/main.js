@@ -27,6 +27,7 @@ const getCurrentDescriptor = (input, key) => {
 // This might throw when using `Proxy`, etc.
 const setProperty = (input, key, finalDescriptor) => {
   try {
+    // eslint-disable-next-line fp/no-mutating-methods
     Object.defineProperty(input, key, finalDescriptor)
   } catch {}
 }
